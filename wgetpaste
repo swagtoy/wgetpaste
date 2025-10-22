@@ -725,6 +725,9 @@ geturl() {
 
 # read the config files
 load_configs() {
+	# XDG home ~/.config
+	local cfg
+	[[ -v XDG_CONFIG_HOME ]] && cfg=$XDG_CONFIG_HOME/ || cfg=~/.config/
 	if [[ ! $IGNORECONFIGS ]]; then
 		# compatibility code
 		local f deprecated=
@@ -740,7 +743,7 @@ load_configs() {
 		done
 		[[ -n $deprecated ]] && echo >&2
 		# new locations override old ones in case they collide
-		for f in {/etc/,~/.}wgetpaste{.d/*,}.conf; do
+		for f in {/etc/,~/.,"$cfg"}wgetpaste{.d/*,}.conf; do
 			if [[ -f $f ]]; then
 				source "$f" || die "Failed to source $f"
 			fi
